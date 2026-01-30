@@ -13,6 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 999;
+app.use(cors());
 
 // --- DIRECTORY SETUP ---
 const uploadDir = path.join(__dirname, 'uploads');
