@@ -22,10 +22,10 @@
     <script>
         let baseUrl;
 
-        if (window.location.href.indexOf("https") === -1) {
-            baseUrl = "http://localhost:999"; 
+       if (window.location.hostname.indexOf("localhost") !== -1) {
+        baseUrl = "http://localhost:999"; 
         } else {
-            baseUrl = "https://online-store-products.onrender.com";
+        baseUrl = "https://online-store-lqv4.onrender.com"; 
         }
 
         async function getAllProducts() {
