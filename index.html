@@ -67,19 +67,19 @@
 
         <form onsubmit="createProduct(); return false" id="productForm" autocomplete="off">
             <label for="productName">Product Title</label>
-            <input type="text" id="productName" name="productName" required placeholder="Search Product">
+            <input type="text" id="productName" name="productName" placeholder="Search Product">
 
             <label for="productPrice">Price</label>
-            <input type="number" id="productPrice" name="productPrice" required placeholder="">
+            <input type="number" id="productPrice" name="productPrice" >
 
             <label for="currencyCode">Currency Code</label>
-            <input type="text" id="currencyCode" name="currencyCode" required placeholder="">
+            <input type="text" id="currencyCode" name="currencyCode" >
 
             <label for="numberOfSale">Initial Stock / Sales</label>
-            <input type="number" id="numberOfSale" name="numberOfSale" required placeholder="0">
+            <input type="number" id="numberOfSale" name="numberOfSale" >
 
             <label for="rating">Customer Rating (0-5)</label>
-            <input type="number" min="0" max="5" id="rating" name="rating" required placeholder="1-5">
+            <input type="number" min="0" max="5" id="rating" name="rating" placeholder="1-5">
 
             <label for="isFreeShipping">Delivery Option</label>
             <select name="isFreeShipping" id="isFreeShipping">
@@ -91,7 +91,7 @@
             <label for="imageInput" class="custom-file-label">
                  Click to Choose Image
             </label>
-            <input type="file" id="imageInput" name="productImage" accept="image/*" required onchange="displayFileName()">
+            <input type="file" id="imageInput" name="productImage" accept="image/*" onchange="displayFileName()">
             <span id="fileNameDisplay">No file selected</span>
 
             <label for="shopName">Store Name</label>
@@ -104,9 +104,10 @@
     </main>
 
     <script>
+        // Sahi Backend Link (lqv4 wala) set kar diya hai
         let baseUrl = window.location.href.indexOf("https") === -1 
             ? "http://localhost:999" 
-            : "https://online-store-products.onrender.com";
+            : "https://online-store-lqv4.onrender.com";
 
         function displayFileName() {
             const input = document.querySelector("#imageInput");

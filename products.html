@@ -22,10 +22,11 @@
     <script>
         let baseUrl;
 
-       if (window.location.hostname.indexOf("localhost") !== -1) {
-        baseUrl = "http://localhost:999"; 
+        if (window.location.hostname.indexOf("localhost") !== -1) {
+            baseUrl = "http://localhost:999"; 
         } else {
-        baseUrl = "https://online-store-lqv4.onrender.com"; 
+            // Backend URL ko sahi link par set kiya hai
+            baseUrl = "https://online-store-lqv4.onrender.com"; 
         }
 
         async function getAllProducts() {
@@ -35,9 +36,18 @@
                 productsListDiv.innerHTML = "";
                 
                 response.data.data.map((eachProduct) => {
-                    const imageSrc = eachProduct.productImage 
-                        ? `${baseUrl}${eachProduct.productImage}` 
-                        : 'https://placehold.co/200x200?text=No+Image';
+                    // --- IMAGE LOGIC FIX ---
+                    // Agar productImage Base64 hai (jo "data:" se shuru hoti hai), toh wahi dikhao.
+                    // Warna purana path hai toh baseUrl ke saath dikhao.
+                    let imageSrc = 'https://placehold.co/200x200?text=No+Image';
+                    
+                    if (eachProduct.productImage) {
+                        if (eachProduct.productImage.startsWith('data:')) {
+                            imageSrc = eachProduct.productImage;
+                        } else {
+                            imageSrc = `${baseUrl}${eachProduct.productImage}`;
+                        }
+                    }
 
                     productsListDiv.innerHTML += `<div class="product-card">
                         <img src="${imageSrc}" alt="Product Image" onerror="this.src='https://placehold.co/200x200?text=Error'">
@@ -47,14 +57,14 @@
                             <span>${eachProduct.productPrice}</span> 
                         </p>
                         <p>${eachProduct.numberOfSale || 0} sold</p>
-                        <p>${eachProduct.isFreeShipping ? "Free Shipping" : "Standard Shipping"}</p>
+                        <p>${eachProduct.isFreeShipping === "true" ? "Free Shipping" : "Standard Shipping"}</p>
                         <p>Seller: ${eachProduct.shopName}</p>
                         <button class="delete" onclick="deleteProduct('${eachProduct._id}')">Delete</button>
                         <button class="edit" onclick="editProduct('${eachProduct._id}')">Edit</button>
                     </div>`;
                 });
             } catch (error) {
-                console.error(error);
+                console.error("Error fetching products:", error);
             }
         }
 
