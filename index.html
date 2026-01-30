@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>My Store</title>
+    <meta name="description" content="List your latest Airpods and Tech Accessories on the best online marketplace. Professional inventory management.">
+    <meta name="theme-color" content="#2b2b4d">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+        /* Custom Styling for File Upload */
+        #imageInput {
+            display: none; 
+        }
+
+        .custom-file-label {
+            display: inline-block;
+            background-color: #30cce7; 
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 10px;
+            border: 1px solid #3e3e6e;
+            transition: 0.3s ease;
+        }
+
+        .custom-file-label:hover {
+            background-color: #3e3e6e;
+        }
+
+        #fileNameDisplay {
+            display: block;
+            font-size: 13px;
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        #submitBtn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="./index.html">Home</a>
+            <a href="./products.html">All Products</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Welcome to our store</h1>
+
+        <form onsubmit="createProduct(); return false" id="productForm" autocomplete="off">
+            <label for="productName">Product Title</label>
+            <input type="text" id="productName" name="productName" required placeholder="Search Product">
+
+            <label for="productPrice">Price</label>
+            <input type="number" id="productPrice" name="productPrice" required placeholder="">
+
+            <label for="currencyCode">Currency Code</label>
+            <input type="text" id="currencyCode" name="currencyCode" required placeholder="">
+
+            <label for="numberOfSale">Initial Stock / Sales</label>
+            <input type="number" id="numberOfSale" name="numberOfSale" required placeholder="0">
+
+            <label for="rating">Customer Rating (0-5)</label>
+            <input type="number" min="0" max="5" id="rating" name="rating" required placeholder="1-5">
+
+            <label for="isFreeShipping">Delivery Option</label>
+            <select name="isFreeShipping" id="isFreeShipping">
+                <option value="true">Free Shipping Available</option>
+                <option value="false">Standard Shipping Fees</option>
+            </select>
+
+            <label>Product Photo:</label>
+            <label for="imageInput" class="custom-file-label">
+                 Click to Choose Image
+            </label>
+            <input type="file" id="imageInput" name="productImage" accept="image/*" required onchange="displayFileName()">
+            <span id="fileNameDisplay">No file selected</span>
+
+            <label for="shopName">Store Name</label>
+            <input type="text" id="shopName" name="shopName" required placeholder="e.g. Gadget Hub">
+
+            <button type="submit" id="submitBtn">Submit Product</button>
+        </form>
+
+        <p id="message" aria-live="polite"></p>
+    </main>
+
+    <script>
+        let baseUrl = window.location.href.indexOf("https") === -1 
+            ? "http://localhost:999" 
+            : "https://online-store-products.onrender.com";
+
+        function displayFileName() {
+            const input = document.querySelector("#imageInput");
+            const display = document.querySelector("#fileNameDisplay");
+            if (input.files.length > 0) {
+                display.textContent = "Selected: " + input.files[0].name;
+            } else {
+                display.textContent = "No file selected";
+            }
+        }
+
+        async function createProduct() {
+            const messageElement = document.querySelector("#message");
+            const submitBtn = document.querySelector("#submitBtn");
+            const fileNameDisplay = document.querySelector("#fileNameDisplay");
+            
+            messageElement.style.color = "white";
+            messageElement.innerHTML = "Processing Upload...";
+            submitBtn.disabled = true;
+
+            let formData = new FormData();
+            formData.append("productName", document.querySelector("#productName").value);
+            formData.append("productPrice", document.querySelector("#productPrice").value);
+            formData.append("currencyCode", document.querySelector("#currencyCode").value);
+            formData.append("numberOfSale", document.querySelector("#numberOfSale").value);
+            formData.append("rating", document.querySelector("#rating").value);
+            formData.append("isFreeShipping", document.querySelector("#isFreeShipping").value);
+            formData.append("shopName", document.querySelector("#shopName").value);
+            
+            let imageInput = document.querySelector("#imageInput");
+            if (imageInput.files[0]) {
+                formData.append("productImage", imageInput.files[0]);
+            }
+
+            try {
+                const response = await axios.post(`${baseUrl}/product`, formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+
+                messageElement.style.color = "#00ff00";
+                messageElement.innerHTML = " Success: Product Listed!";
+                document.querySelector("#productForm").reset();
+                fileNameDisplay.textContent = "No file selected"; 
+            } catch (error) {
+                console.error(error);
+                messageElement.style.color = "#ff4d4d";
+                messageElement.innerHTML = " Error: Failed to add product.";
+            } finally {
+                submitBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

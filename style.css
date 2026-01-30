@@ -1,0 +1,138 @@
+/* --- Global Reset --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #d1d9db; /* Original Grey Base */
+  color: #ffffff;
+  padding: 20px;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* --- THE ORIGINAL LINES (Slanted Design) --- */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: 
+    repeating-linear-gradient(110deg, transparent, transparent 120px, rgba(48, 204, 231, 0.4) 121px, rgba(48, 204, 231, 0.4) 123px),
+    repeating-linear-gradient(200deg, transparent, transparent 180px, rgba(48, 204, 231, 0.3) 181px, rgba(48, 204, 231, 0.3) 183px);
+  pointer-events: none;
+}
+
+/* --- NAVIGATION (Upar Rahega) --- */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(43, 85, 91, 0.85); 
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+nav a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* --- HEADING COLOR FIX --- */
+h1 {
+  text-align: center;
+  margin-top: 50px !important; 
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  /* AB COLOR WAHI HAI JO NAVIGATION BAR KA HAI */
+  color: rgba(43, 85, 91, 1) !important; 
+  width: 100%;
+}
+
+/* --- FORM (Submit Button Phele Jesa) --- */
+form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 20px;
+  background: rgba(43, 85, 91, 0.9);
+}
+
+form input, form select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.1); 
+  color: #ffffff !important; 
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+}
+
+form button, input[type="submit"] {
+  background: #0099ff !important; 
+  color: white;
+  border-radius: 50px;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* --- PRODUCT GRID --- */
+#productsListDiv {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: center;
+  gap: 25px;
+  margin-top: 10px;
+}
+
+#productsListDiv > div {
+  width: 280px;
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(43, 85, 91, 0.9);
+  text-align: center;
+}
+
+#productsListDiv > div > img {
+  width: 100%;
+  height: 200px; 
+  object-fit: contain;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+/* --- DELETE & EDIT BUTTONS --- */
+button.delete {
+  background: #ff416c !important; 
+  color: white;
+  border-radius: 50px;
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+  border: none;
+}
+
+button.edit {
+  background: #0072ff !important; 
+  color: white;
+  border-radius: 50px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+}

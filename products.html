@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Store Inventory</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Online Store Inventory</h1>
+
+    <nav>
+        <a href="./index.html">Home</a>
+        <a href="./products.html">All Products</a>
+    </nav>
+
+    <div id="productsListDiv"></div>
+    <div id="updateForm"></div>
+
+    <script>
+        let baseUrl;
+
+        if (window.location.href.indexOf("https") === -1) {
+            baseUrl = "http://localhost:999"; 
+        } else {
+            baseUrl = "https://online-store-products.onrender.com";
+        }
+
+        async function getAllProducts() {
+            try {
+                const response = await axios.get(baseUrl + "/products");
+                let productsListDiv = document.querySelector("#productsListDiv");
+                productsListDiv.innerHTML = "";
+                
+                response.data.data.map((eachProduct) => {
+                    const imageSrc = eachProduct.productImage 
+                        ? `${baseUrl}${eachProduct.productImage}` 
+                        : 'https://placehold.co/200x200?text=No+Image';
+
+                    productsListDiv.innerHTML += `<div class="product-card">
+                        <img src="${imageSrc}" alt="Product Image" onerror="this.src='https://placehold.co/200x200?text=Error'">
+                        <p>${eachProduct.productName}</p>
+                        <p> 
+                            <span>${eachProduct.currencyCode}</span> 
+                            <span>${eachProduct.productPrice}</span> 
+                        </p>
+                        <p>${eachProduct.numberOfSale || 0} sold</p>
+                        <p>${eachProduct.isFreeShipping ? "Free Shipping" : "Standard Shipping"}</p>
+                        <p>Seller: ${eachProduct.shopName}</p>
+                        <button class="delete" onclick="deleteProduct('${eachProduct._id}')">Delete</button>
+                        <button class="edit" onclick="editProduct('${eachProduct._id}')">Edit</button>
+                    </div>`;
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function deleteProduct(id) {
+            let response = await axios.delete(`${baseUrl}/product/${id}`).catch((e) => {
+                console.log("error: ", e);
+                return;
+            });
+            if (response) getAllProducts();
+        }
+
+        async function editProduct(id) {
+            let response = await axios.get(`${baseUrl}/product/${id}`).catch((e) => {
+                console.log("Error: ", e);
+                return null;
+            });
+
+            if (response && response.data && response.data.data) {
+                let product = response.data.data;
+                document.querySelector("#updateForm").innerHTML = `
+                    <div class="updateFormContainer" id="modalOverlay">
+                        <form onsubmit="completeUpdate(); return false">
+                            <h2>Edit Product</h2>
+                            <input type="hidden" id="productId" value="${product._id}">
+                            <label>Product Name</label>
+                            <input type="text" id="productName" value="${product.productName}" required>
+                            <label>Price</label>
+                            <input type="number" id="productPrice" value="${product.productPrice}" required>
+                            <input type="submit" value="Save Changes" class="save-btn">
+                            <button type="button" onclick="closeModal()">Cancel</button>
+                        </form>
+                    </div>`;
+            }
+        }
+
+        function closeModal() {
+            document.querySelector("#updateForm").innerHTML = "";
+        }
+
+        function completeUpdate() {
+            let productId = document.querySelector("#productId").value;
+            let productName = document.querySelector("#productName").value;
+            let productPrice = document.querySelector("#productPrice").value;
+
+            axios.put(`${baseUrl}/product/${productId}`, { productName, productPrice })
+                .then(function (response) {
+                    closeModal();
+                    getAllProducts();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+        getAllProducts(); 
+    </script>
+</body>
+</html>
